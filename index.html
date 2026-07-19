@@ -39,8 +39,6 @@
     <div class="logo-box">📄</div>
     Folio <em>Drop</em>
   </div>
-  <!-- FIX: Hamburger button was defined in CSS but never existed in HTML -->
-  <button class="hamburger-btn" onclick="openNavDrawer()" aria-label="Open menu">☰</button>
   <nav>
     <button onclick="showHome()">All Tools</button>
     <button onclick="openTool('merge')">Merge</button>
@@ -52,6 +50,13 @@
   </nav>
   <button class="coffee-btn" onclick="document.getElementById('coffee-modal').classList.add('on')">☕ Buy me a coffee</button>
 </header>
+
+<!-- Mobile-only toolbar: the hamburger lives in its own row directly under
+     the header (not floating on top of it), so it can never overlap the
+     logo text or the coffee button. Hidden entirely on desktop. -->
+<div class="mobile-toolbar">
+  <button class="hamburger-btn" onclick="openNavDrawer()" aria-label="Open menu">☰</button>
+</div>
 
 <!-- Mobile slide-over nav drawer -->
 <div class="nav-drawer-overlay" id="nav-drawer-overlay" onclick="if(event.target===this)closeNavDrawer()">
@@ -79,6 +84,7 @@
 <!-- COFFEE MODAL -->
 <div class="coffee-modal-overlay" id="coffee-modal" onclick="if(event.target===this)this.classList.remove('on')">
   <div class="coffee-modal">
+    <button class="coffee-modal-x" onclick="document.getElementById('coffee-modal').classList.remove('on')" aria-label="Close">✕</button>
     <h3>☕ Buy Me a Coffee</h3>
     <p style="color:var(--muted);font-size:.83rem;margin-bottom:14px;line-height:1.6;">
       Folio Drop is completely free — no ads, no signups, no limits.<br>
