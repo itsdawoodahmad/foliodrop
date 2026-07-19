@@ -111,7 +111,7 @@ The returned page numbers are validated (must be integers, in range, sorted) bef
 ## 6. How to Run This Project
 
 **Option A — just use it (no setup):**
-Open the live URL: **https://foliodrop-six.vercel.app** — all 14 core tools work immediately, no signup.
+Open the live URL: **https://foliodrop-six.vercel.app** — all 15 core tools work immediately, no signup.
 
 **Option B — run the frontend only, locally:**
 ```bash
