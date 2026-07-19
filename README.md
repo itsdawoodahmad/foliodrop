@@ -97,12 +97,14 @@ The returned page numbers are validated (must be integers, in range, sorted) bef
 
 ## 5. Screenshots
 
-> _Add at least 3 screenshots here before submitting — see "Adding your screenshots" below._
+**Home page — hero and first row of tools**
+![Home / tool grid](screenshots/home.png)
 
-| | |
-|---|---|
-| ![Home / tool grid](screenshots/home.png) | ![AI Summarize in action](screenshots/ai-summarize.png) |
-| ![Merge PDFs tool](screenshots/merge.png) | ![Compare PDFs diff view](screenshots/compare.png) |
+**Full tool grid — remaining 10 tools, plus footer privacy note**
+![All tools grid](screenshots/tools-grid.png)
+
+**AI Summarize — real output on an uploaded PDF**
+![AI Summarize in action](screenshots/ai-summarize.png)
 
 ---
 
