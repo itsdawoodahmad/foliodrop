@@ -1287,9 +1287,13 @@ function p2w_fullStylesXml(){
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // WORD TO PDF
-// FIX: render container uses position:fixed+visibility:hidden rather
-//      than absolute+top:-9999px, which is more reliable in Android
-//      WebViews that clip absolutely positioned off-screen content.
+// NOTE: render container uses position:fixed + a large negative left
+//       offset (NOT visibility:hidden/display:none). html2canvas will not
+//       paint elements that are visibility:hidden — it captures them as a
+//       blank canvas — which was the cause of the "converts to blank PDF"
+//       bug. Moving it off-screen while keeping it visible avoids both the
+//       blank-canvas issue and the Android WebView clipping issue that the
+//       previous top:-9999px approach had.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 async function wordToPDF() {
   if (!S.word2pdf.files.length) { toast('⚠️ Please select a Word file'); return; }
@@ -1344,15 +1348,16 @@ async function htmlToPdfBytes(htmlContent, onProgress) {
 
   var wrap = document.createElement('div');
   wrap.id  = '__w2pdf_wrap__';
-  // FIX: use fixed positioning + visibility:hidden instead of absolute+top:-9999px
-  //      Absolute off-screen is clipped by some Android WebView viewport implementations,
-  //      causing html2canvas to capture a blank/truncated canvas.
+  // position:fixed keeps this out of any scroll/clip context (unlike plain
+  // absolute positioning, which some Android WebViews clip when scrolled),
+  // and a large negative left offset moves it off-screen WITHOUT using
+  // visibility:hidden or display:none — html2canvas paints hidden elements
+  // as blank, which is what caused the empty-PDF bug.
   wrap.style.cssText = [
     'position:fixed',
     'top:0',
-    'left:0',
+    'left:-10000px',
     'width:'+RENDER_W+'px',
-    'visibility:hidden',
     'pointer-events:none',
     'background:#fff',
     'color:#000',
