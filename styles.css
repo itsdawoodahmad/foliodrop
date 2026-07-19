@@ -210,13 +210,14 @@ footer a:hover{color:var(--muted);}
   .logo{font-size:0.9rem;gap:5px;flex-shrink:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .logo-box{width:22px;height:22px;font-size:0.7rem;border-radius:5px;flex-shrink:0;}
   .coffee-btn{font-size:0.68rem;padding:6px 8px;white-space:nowrap;flex-shrink:0;gap:4px;}
-  .hero-menu-btn{
+  .mobile-menu-row{
     display:flex;
+    justify-content:flex-end;
+    padding:8px 0 0;
+  }
+  .sidebar-btn{
     box-shadow:0 2px 10px rgba(0,0,0,.3);
-    font-size:.7rem;
-    height:32px;
-    padding:0 14px;
-    margin-bottom:14px;
+    border-radius:100px 0 0 100px;
   }
   .hero{padding:40px 16px 30px;}
   .hero h1{font-size:2.1rem;margin-bottom:10px;}
@@ -244,32 +245,34 @@ footer a:hover{color:var(--muted);}
   footer{padding:24px 16px;}
 }
 
-/* Sidebar/menu toggle button — mobile only. Hidden by default (desktop);
-   re-enabled inside the @media(max-width:600px) block below. Uses
-   display:flex + width:fit-content + margin:auto for bulletproof centering
-   regardless of the parent's text-align, and matches the app's pill/accent
-   theme (same family as the badge and coffee button). */
-.hero-menu-btn{
+/* Sidebar/menu toggle button — mobile view only, hidden entirely on
+   desktop. Row sits in normal document flow directly under the header
+   (never floating/overlapping), pushed flush to the right corner so it
+   lands right below the "Buy me a coffee" button. Re-enabled and sized
+   inside the @media(max-width:600px) block below. Styled as a pill in the
+   app's accent theme, same family as the badge and coffee button. */
+.mobile-menu-row{
   display:none;
+}
+.sidebar-btn{
+  display:flex;
   align-items:center;
   justify-content:center;
   gap:6px;
-  width:fit-content;
-  margin:0 auto 20px;
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:100px;
   color:var(--accent);
-  height:36px;
-  padding:0 18px;
+  height:34px;
+  padding:0 16px;
   font-family:'Syne',sans-serif;
-  font-size:.78rem;
+  font-size:.74rem;
   font-weight:700;
   letter-spacing:.03em;
   cursor:pointer;
   transition:all .2s;
 }
-.hero-menu-btn:hover{
+.sidebar-btn:hover{
   color:#000;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   border-color:transparent;
