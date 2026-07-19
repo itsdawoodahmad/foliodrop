@@ -3,7 +3,7 @@
 // still opens when offline. CDN library requests are intentionally left
 // untouched here so their Subresource Integrity checks behave normally.
 
-const CACHE_NAME = 'foliodrop-shell-v1';
+const CACHE_NAME = 'foliodrop-shell-v2';
 const APP_SHELL = [
   './',
   './index.html',
