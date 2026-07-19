@@ -1287,13 +1287,18 @@ function p2w_fullStylesXml(){
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // WORD TO PDF
-// NOTE: render container uses position:fixed + a large negative left
-//       offset (NOT visibility:hidden/display:none). html2canvas will not
-//       paint elements that are visibility:hidden — it captures them as a
-//       blank canvas — which was the cause of the "converts to blank PDF"
-//       bug. Moving it off-screen while keeping it visible avoids both the
-//       blank-canvas issue and the Android WebView clipping issue that the
-//       previous top:-9999px approach had.
+// NOTE ON THE "BLANK PDF" BUG: html2canvas does not take a real screenshot —
+//       it walks the DOM and repaints it onto a canvas, and it only does
+//       this correctly for content positioned within the actual page's
+//       on-screen coordinates. Any element moved off-screen (large negative
+//       left/top, whether position:fixed or absolute) falls outside the
+//       area html2canvas renders and comes back as a blank white canvas —
+//       this is a well-known html2canvas limitation, not just a
+//       visibility:hidden problem. So instead of moving the render
+//       container off-screen, we keep it at real on-screen coordinates
+//       (top:0/left:0) and simply hide it from the user behind an opaque
+//       full-screen overlay (with page scrolling locked) while it renders,
+//       then remove both once the capture is done.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 async function wordToPDF() {
   if (!S.word2pdf.files.length) { toast('⚠️ Please select a Word file'); return; }
@@ -1346,17 +1351,47 @@ async function htmlToPdfBytes(htmlContent, onProgress) {
   onProgress = onProgress || function(){};
   var RENDER_W = 816, PAGE_H = 1056, SCALE = 2;
 
+  // Lock page scroll and cover the viewport with an opaque overlay so the
+  // render container below can sit at real on-screen coordinates (which
+  // html2canvas needs to capture it correctly) without the user ever
+  // seeing the raw white page flash by.
+  var prevHtmlOverflow = document.documentElement.style.overflow;
+  var prevBodyOverflow = document.body.style.overflow;
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+
+  var overlay = document.createElement('div');
+  overlay.id = '__w2pdf_overlay__';
+  overlay.style.cssText = [
+    'position:fixed',
+    'inset:0',
+    'background:#0f0e0d',
+    'z-index:999999',
+    'display:flex',
+    'align-items:center',
+    'justify-content:center',
+    'color:#8a8480',
+    'font-family:"DM Sans",sans-serif',
+    'font-size:0.9rem',
+    'text-align:center',
+    'padding:20px'
+  ].join(';');
+  overlay.textContent = 'Preparing your PDF…';
+  document.body.appendChild(overlay);
+
   var wrap = document.createElement('div');
   wrap.id  = '__w2pdf_wrap__';
-  // position:fixed keeps this out of any scroll/clip context (unlike plain
-  // absolute positioning, which some Android WebViews clip when scrolled),
-  // and a large negative left offset moves it off-screen WITHOUT using
-  // visibility:hidden or display:none — html2canvas paints hidden elements
-  // as blank, which is what caused the empty-PDF bug.
+  // Real, on-screen coordinates (top:0 / left:0) — NOT moved off-screen.
+  // html2canvas repaints the DOM tree onto a canvas rather than taking a
+  // literal screenshot, and it only does this reliably for elements within
+  // the page's actual on-screen bounds; anything shifted off-screen (large
+  // negative left/top) comes back as a blank white canvas, which was the
+  // cause of the "converts to blank PDF" bug. The opaque overlay above
+  // (higher z-index) is what keeps this invisible to the user instead.
   wrap.style.cssText = [
-    'position:fixed',
+    'position:absolute',
     'top:0',
-    'left:-10000px',
+    'left:0',
     'width:'+RENDER_W+'px',
     'pointer-events:none',
     'background:#fff',
@@ -1365,7 +1400,7 @@ async function htmlToPdfBytes(htmlContent, onProgress) {
     'font-size:12pt',
     'line-height:1.65',
     'padding:60px 72px',
-    'z-index:99999',
+    'z-index:1',
     'overflow:visible',
     'word-wrap:break-word',
     'box-sizing:border-box'
@@ -1400,11 +1435,16 @@ async function htmlToPdfBytes(htmlContent, onProgress) {
   try {
     fullCanvas = await html2canvas(wrap, {
       scale: SCALE, width: RENDER_W, height: totalH,
-      windowWidth: RENDER_W, backgroundColor: '#ffffff',
+      windowWidth: RENDER_W, windowHeight: totalH,
+      scrollX: 0, scrollY: 0, x: 0, y: 0,
+      backgroundColor: '#ffffff',
       useCORS: true, allowTaint: true, logging: false
     });
   } finally {
     if (document.body.contains(wrap)) document.body.removeChild(wrap);
+    if (document.body.contains(overlay)) document.body.removeChild(overlay);
+    document.documentElement.style.overflow = prevHtmlOverflow;
+    document.body.style.overflow = prevBodyOverflow;
   }
 
   onProgress(0.6, 'Building PDF…');
