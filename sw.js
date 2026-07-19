@@ -3,7 +3,7 @@
 // still opens when offline. CDN library requests are intentionally left
 // untouched here so their Subresource Integrity checks behave normally.
 
-const CACHE_NAME = 'foliodrop-shell-v2';
+const CACHE_NAME = 'foliodrop-shell-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -41,16 +41,17 @@ self.addEventListener('fetch', function (event) {
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) {
     return;
   }
+  // Network-first: always try the network so deployed fixes show up
+  // immediately. Only fall back to the cached copy when offline.
   event.respondWith(
-    caches.match(req).then(function (cached) {
-      if (cached) return cached;
-      return fetch(req).then(function (res) {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then(function (cache) { cache.put(req, copy); });
-        }
-        return res;
-      }).catch(function () { return cached; });
+    fetch(req).then(function (res) {
+      if (res && res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then(function (cache) { cache.put(req, copy); });
+      }
+      return res;
+    }).catch(function () {
+      return caches.match(req);
     })
   );
 });

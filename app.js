@@ -2085,4 +2085,14 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js').catch(function () { /* offline support unavailable; app still works online */ });
   });
+
+  // When a new service worker takes control (i.e. a fresh deploy has been
+  // installed), reload once so the page picks up the new files immediately
+  // instead of silently running on out-of-date cached code.
+  let refreshedOnce = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    if (refreshedOnce) return;
+    refreshedOnce = true;
+    window.location.reload();
+  });
 }
