@@ -210,16 +210,18 @@ footer a:hover{color:var(--muted);}
   .logo{font-size:0.9rem;gap:5px;flex-shrink:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .logo-box{width:22px;height:22px;font-size:0.7rem;border-radius:5px;flex-shrink:0;}
   .coffee-btn{font-size:0.68rem;padding:6px 8px;white-space:nowrap;flex-shrink:0;gap:4px;}
-  /* Hamburger is pulled out of the header flex row entirely (position:fixed
-     removes it from flex layout) so it can no longer collide with the logo
-     text or the coffee button. It floats just below the header instead. */
+  /* The hamburger now lives in its own row (.mobile-toolbar) directly
+     under the header in normal document flow, so it's physically
+     impossible for it to overlap the logo or the coffee button — no
+     fixed-position/magic-number positioning needed. */
+  .mobile-toolbar{
+    display:flex;
+    justify-content:flex-end;
+    padding:6px 10px 0;
+  }
   .hamburger-btn{
-    display:flex !important;
-    position:fixed;
-    top:50px;
-    right:10px;
-    z-index:150;
-    box-shadow:0 4px 14px rgba(0,0,0,.4);
+    display:flex;
+    box-shadow:0 2px 10px rgba(0,0,0,.3);
   }
   .hero{padding:40px 16px 30px;}
   .hero h1{font-size:2.1rem;margin-bottom:10px;}
@@ -245,6 +247,11 @@ footer a:hover{color:var(--muted);}
   .coffee-modal{padding:24px 20px;}
   .toast{left:16px;right:16px;bottom:20px;max-width:none;text-align:center;}
   footer{padding:24px 16px;}
+}
+
+/* Mobile-only toolbar row that holds the hamburger button (hidden on desktop) */
+.mobile-toolbar{
+  display:none;
 }
 
 /* Hamburger button */
@@ -336,11 +343,18 @@ footer a:hover{color:var(--muted);}
 /* COFFEE BUTTON & MODAL */
 .coffee-btn{background:linear-gradient(135deg,#f5a623,#e8541e);border:none;color:#000;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;padding:8px 18px;border-radius:100px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;}
 .coffee-btn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(245,166,35,.35);}
-.coffee-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9998;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+/* Overlay covers the viewport and scrolls internally (overflow-y:auto) so
+   tall modal content is never trapped off-screen with no way to reach the
+   close button. The modal itself uses margin:auto inside the flex overlay,
+   which centers it when it fits and lets it scroll into view when it's
+   taller than the screen — instead of stretching to fill the whole page. */
+.coffee-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9998;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:32px 16px;backdrop-filter:blur(4px);}
 .coffee-modal-overlay.on{display:flex;}
-.coffee-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:32px 28px;text-align:center;max-width:300px;width:90%;animation:fup .25s ease;}
-.coffee-modal h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:6px;}
+.coffee-modal{position:relative;margin:auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:32px 28px;text-align:center;max-width:300px;width:100%;animation:fup .25s ease;}
+.coffee-modal h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:6px;padding-right:18px;}
 .coffee-modal p{color:var(--muted);font-size:.83rem;margin-bottom:18px;line-height:1.6;}
 .coffee-modal img{width:200px;height:200px;border-radius:var(--rs);border:2px solid var(--border);}
 .coffee-modal-close{margin-top:16px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:7px 20px;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;transition:all .18s;}
 .coffee-modal-close:hover{color:var(--text);border-color:var(--dim);}
+.coffee-modal-x{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);font-size:1.05rem;line-height:1;cursor:pointer;padding:6px 8px;border-radius:var(--rs);transition:all .18s;}
+.coffee-modal-x:hover{color:var(--text);background:var(--surface2);}
