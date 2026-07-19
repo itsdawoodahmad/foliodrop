@@ -210,18 +210,12 @@ footer a:hover{color:var(--muted);}
   .logo{font-size:0.9rem;gap:5px;flex-shrink:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .logo-box{width:22px;height:22px;font-size:0.7rem;border-radius:5px;flex-shrink:0;}
   .coffee-btn{font-size:0.68rem;padding:6px 8px;white-space:nowrap;flex-shrink:0;gap:4px;}
-  /* This toolbar row sits directly under the header in normal document
-     flow on every screen size, so it's physically impossible for it to
-     overlap the logo or the coffee button — no fixed-position/magic-number
-     positioning needed. On mobile it just gets tighter padding/sizing. */
-  .mobile-toolbar{
-    padding:6px 10px 0;
-  }
-  .hamburger-btn{
+  .hero-menu-btn{
     box-shadow:0 2px 10px rgba(0,0,0,.3);
     font-size:.72rem;
     height:32px;
     padding:0 10px;
+    margin-bottom:14px;
   }
   .hero{padding:40px 16px 30px;}
   .hero h1{font-size:2.1rem;margin-bottom:10px;}
@@ -249,19 +243,11 @@ footer a:hover{color:var(--muted);}
   footer{padding:24px 16px;}
 }
 
-/* Toolbar row directly under the header that holds the sidebar/menu
-   button. It lives in its own row in normal document flow (not floating
-   over the header), right-aligned so it sits right under the coffee
-   button — visible on every screen size, not just mobile. */
-.mobile-toolbar{
-  display:flex;
-  justify-content:flex-end;
-  padding:10px 44px 0;
-}
-
-/* Sidebar/menu toggle button */
-.hamburger-btn{
-  display:flex;
+/* Sidebar/menu toggle button — lives inside the hero, centered above the
+   "15 Tools" badge (hero already has text-align:center, so this inline
+   button centers itself with no extra layout needed). */
+.hero-menu-btn{
+  display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:6px;
@@ -269,17 +255,16 @@ footer a:hover{color:var(--muted);}
   border:1px solid var(--border);
   border-radius:var(--rs);
   color:var(--muted);
-  width:auto;
   height:36px;
   padding:0 14px;
   font-family:'DM Sans',sans-serif;
   font-size:.82rem;
   font-weight:500;
   cursor:pointer;
-  flex-shrink:0;
   transition:all .18s;
+  margin-bottom:20px;
 }
-.hamburger-btn:hover{color:var(--text);border-color:var(--dim);}
+.hero-menu-btn:hover{color:var(--text);border-color:var(--dim);}
 
 /* Slide-over nav drawer */
 .nav-drawer-overlay{
