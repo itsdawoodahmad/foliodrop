@@ -1,0 +1,9 @@
+{
+  "name": "foliodrop",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Folio Drop — an in-browser PDF toolkit with optional AI features (Vercel serverless functions).",
+  "engines": {
+    "node": ">=18"
+  }
+}
