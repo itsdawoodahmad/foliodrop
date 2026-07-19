@@ -207,11 +207,20 @@ footer a:hover{color:var(--muted);}
   html,body{overflow-x:hidden;width:100%;}
   header{padding:8px 10px;gap:8px;}
   nav{display:none;}
-  .logo{font-size:0.9rem;gap:5px;flex-shrink:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+  .logo{font-size:0.9rem;gap:5px;flex-shrink:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .logo-box{width:22px;height:22px;font-size:0.7rem;border-radius:5px;flex-shrink:0;}
   .coffee-btn{font-size:0.68rem;padding:6px 8px;white-space:nowrap;flex-shrink:0;gap:4px;}
-  /* FIX: Show hamburger on mobile */
-  .hamburger-btn{display:flex !important;}
+  /* Hamburger is pulled out of the header flex row entirely (position:fixed
+     removes it from flex layout) so it can no longer collide with the logo
+     text or the coffee button. It floats just below the header instead. */
+  .hamburger-btn{
+    display:flex !important;
+    position:fixed;
+    top:50px;
+    right:10px;
+    z-index:150;
+    box-shadow:0 4px 14px rgba(0,0,0,.4);
+  }
   .hero{padding:40px 16px 30px;}
   .hero h1{font-size:2.1rem;margin-bottom:10px;}
   .hero p{font-size:0.9rem;}
