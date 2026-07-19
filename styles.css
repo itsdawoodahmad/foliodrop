@@ -190,6 +190,30 @@ nav button:hover{color:var(--text);background:var(--surface);}
 .about-privacy-row.ok{background:rgba(76,175,134,.08);border:1px solid rgba(76,175,134,.28);}
 .about-privacy-row.note{background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.25);}
 .about-privacy-ico{font-size:1.1rem;flex-shrink:0;}
+
+/* Mobile-only toolbar row that holds the hamburger button (hidden on desktop) */
+.mobile-toolbar{
+  display:none;
+}
+
+/* Hamburger button */
+.hamburger-btn{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--rs);
+  color:var(--muted);
+  width:36px;
+  height:36px;
+  font-size:1.1rem;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:all .18s;
+}
+.hamburger-btn:hover{color:var(--text);border-color:var(--dim);}
+
 @media(max-width:600px){
   .about-stats{grid-template-columns:1fr 1fr;}
   .about-dev-card{padding:16px;}
@@ -248,29 +272,6 @@ footer a:hover{color:var(--muted);}
   .toast{left:16px;right:16px;bottom:20px;max-width:none;text-align:center;}
   footer{padding:24px 16px;}
 }
-
-/* Mobile-only toolbar row that holds the hamburger button (hidden on desktop) */
-.mobile-toolbar{
-  display:none;
-}
-
-/* Hamburger button */
-.hamburger-btn{
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--rs);
-  color:var(--muted);
-  width:36px;
-  height:36px;
-  font-size:1.1rem;
-  cursor:pointer;
-  flex-shrink:0;
-  transition:all .18s;
-}
-.hamburger-btn:hover{color:var(--text);border-color:var(--dim);}
 
 /* Slide-over nav drawer */
 .nav-drawer-overlay{
